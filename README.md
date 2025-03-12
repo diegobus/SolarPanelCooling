@@ -52,79 +52,83 @@ You can install the necessary dependencies in a conda enviroment with:
 pip install -r requirements.txt
 ```
 
-## Data Preparation
+## Model Workflow
 
-### Acquiring Solar Data
+### Environmental Data Acquisition
 1. Run `get_solar_data.py` to download solar irradiance and temperature data for Mojave desert from NREL's NSRDB (National Solar Radiation Database). NOTE:
 this script depends on NERL API key. Go to the NERL website to request one, then fill out `config_template.py`and rename to `config.py`.
 2. Data is saved to `solar_data/` directory. The primary dataset used is `mojave_summer_clear_days.csv` which contains hourly measurements of:
    - `air_temperature`: Ambient air temperature (°C)
    - `ghi`: Global horizontal irradiance (W/m^2)
 
+### Cooling Data Generation
 
-## Running Instructions
-
-### Data Generation
-
-To generate the training data:
+To generate the training data, navigate to `src/` and run:
 ```
 python parallel_generate_model_data.py
 ```
-This will simulate solar panel performance with various cooling conditions and find optimal flow rates. The parallel version utilizes multiprocessing to speed up computation.
+This will simulate solar panel performance with various cooling conditions and find optimal flow rates for each set of enviromental conditions and a cooling fluid initial temperature randomly sampled from normal distribution (μ=25, σ=2.5). The parallel version utilizes multiprocessing to speed up computation.
 
 For a non-parallel version (slower but easier to debug):
 ```
 python generate_model_data.py
 ```
+For parallel and non-parallel versions, you can adjust `num_samples` to only run a few samples from dataset. You can also uncomment print statements to watch each experiment run.
 
-### Model Training
+Model training data is saved to `solar_data/cooling_data_complete.csv`.
 
-To train the neural network model:
-```
+## Model Training and Evaluation
+
+## Model Training
+
+### Running the Model
+To train the neural network model, run:
+```bash
 python model.py
 ```
 
-This will:
-1. Load the generated dataset
-2. Train a neural network to predict optimal coolant flow rates
-3. Evaluate the model using R² score
-4. Generate plots for model performance
-5. Save the trained model weights to `nn_weights.csv`
+### Training Process
 
+1. **Load Dataset**
+   - Reads `large_cooling_data_complete.csv`
+   - Features: `Tamb` (ambient temperature), `I` (solar irradiance), `Tcool_in` (coolant inlet temp)
+   - Target: `mass_flowrate` (optimal coolant flow rate)
 
-### Data Flow
+2. **Preprocess Data**
+   - Splits into 80% training, 20% testing
+   - Standardizes input features and target
 
-1. Solar data → Data generation scripts → Training datasets
-2. Training datasets → Neural network model → Trained weights
-3. Trained weights can be used for real-time flow rate prediction
+3. **Train Neural Network**
+   - **Architecture**:
+     - Input: 3 features
+     - Hidden: 3 neurons, ReLU activation, L2 regularization
+     - Dropout: 10% to reduce overfitting
+     - Output: Single neuron, linear activation
+   - **Training Parameters**:
+     - Optimizer: Adam
+     - Loss: Mean Squared Error (MSE)
+     - Metric: Mean Absolute Error (MAE)
+     - Early stopping: Stops if validation loss doesn't improve after 10 epochs
 
-## Ensuring Reproducibility
+4. **Save Model Weights**
+   - Extracts and saves weights to `nn_weights.csv`
 
-To reproduce the results:
+5. **Evaluate Performance**
+   - Computes **R² score**
+   - Clamps negative predictions to zero (physical constraint)
+   - Generates:
+     - **Actual vs. Predicted Flow Rate Plot**
+     - **Training Loss Curve**
 
-1. Use the exact datasets provided or follow the data preparation steps precisely
-2. Maintain the same random seeds used in code (set to 42 for train-test splits)
-3. Run the code with the dependencies at specified versions
-4. Use the same hyperparameters for the neural network model
+### Results
 
-The model training includes early stopping to prevent overfitting, which may cause slight variations in results due to the stochastic nature of neural network training. For full reproducibility, you can set the global random seed for TensorFlow by adding the following to the top of `model.py`:
+- **Actual vs. Predicted Flow Rate**: Scatter plot comparing predictions to actual values
+- **Training Loss Curve**: Tracks training/validation loss over epochs
 
-```python
-import tensorflow as tf
-import numpy as np
-import random
-
-# Set global random seeds
-np.random.seed(42)
-random.seed(42)
-tf.random.set_seed(42)
+### Example Output
+```bash
+Neural network weights saved to nn_weights.csv
+Test R^2 Score: 0.9419
 ```
+After training, weights and evaluation plots are saved.
 
-## Results and Validation
-
-The model accuracy can be assessed through:
-- R² score reported during training
-- Visual inspection of the actual vs. predicted plots
-- Validation loss curves showing convergence
-
-The current model achieves competitive R² scores, indicating a good fit between predicted and actual optimal flow rates.

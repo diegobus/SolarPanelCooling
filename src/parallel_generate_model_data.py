@@ -9,7 +9,7 @@ import multiprocessing
 
 
 # Load Mojave dataset
-df = pd.read_csv("solar_data/mojave_summer_clear_days.csv")
+df = pd.read_csv("../solar_data/mojave_summer_clear_days.csv")
 
 # Define constants & parameter ranges
 Tcoolant_dist = (25, 2.5)  # Coolant inlet temperature (°C), normal distribution
@@ -158,8 +158,8 @@ if __name__ == "__main__":
     final_df = pd.DataFrame(
         data, columns=["Tamb", "I", "Tcool_in", "mass_flowrate", "eff_gain", "Tp_no_cool", "Tp_cool"]
     )
-    final_df.to_csv("solar_cooling_training_data_test.csv", index=False)
+    final_df.to_csv("../solar_data/cooling_data_complete.csv", index=False)
 
     print(
-        "------- Test dataset generation complete. Saved as solar_cooling_training_data_test.csv -------"
+        "------- Test dataset generation complete. Saved as cooling_data_complete.csv in solar_data/ -------"
     )

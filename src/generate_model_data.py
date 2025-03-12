@@ -3,7 +3,7 @@ import numpy as np
 from channel_methods import channel
 
 # Load Mojave dataset
-df = pd.read_csv("mojave_summer_clear_days.csv")
+df = pd.read_csv("../solar_data/mojave_summer_clear_days.csv")
 
 # Define constants & parameter ranges
 Tcoolant_dist = (25, 2.5)  # Coolant inlet temperature (°C), normal distribution
@@ -32,9 +32,7 @@ def assess_efficiency_increase(T_panel_no_cooling, T_panel_with_cooling):
 def run_experiment(Tamb, I, Tcoolant_in, mass_flowrate, cooling):
     """Runs a single cooling experiment and returns the temperature profile."""
 
-    print(
-        f"Running experiment with Tamb={Tamb}°C, I={I} W/m^2, Tcoolant_in={Tcoolant_in}°C, mass_flowrate={mass_flowrate} kg/s, cooling={'On' if cooling else 'Off'}"
-    )
+    # print(f"Running experiment with Tamb={Tamb}°C, I={I} W/m^2, Tcoolant_in={Tcoolant_in}°C, mass_flowrate={mass_flowrate} kg/s, cooling={'On' if cooling else 'Off'}")
 
     # Redefine experimental variables in appropriate units
     Tamb = Tamb + 273.15  # Convert to Kelvin
@@ -67,7 +65,7 @@ def find_optimal_flowrate(Tamb, I, Tcoolant_in):
     efficiency_threshold = 0.05  # Require at least 5% efficiency gain
 
     for mass_flowrate in mass_flowrate_range:
-        print(f"Testing mass flowrate: {mass_flowrate} kg/s")
+        #print(f"Testing mass flowrate: {mass_flowrate} kg/s")
 
         # simulate no cooling and cooling
         T_panel_no_cooling = run_experiment(
@@ -82,7 +80,7 @@ def find_optimal_flowrate(Tamb, I, Tcoolant_in):
             T_panel_no_cooling, np.average(T_panel_with_cooling)
         )  # Compute efficiency improvement
 
-        print(f"Efficiency gain: {net_efficiency_gain}")
+        #print(f"Efficiency gain: {net_efficiency_gain}")
 
         # Select flowrate that maximizes net efficiency gain
         if net_efficiency_gain > best_efficiency_gain:
@@ -138,7 +136,7 @@ for index, row in df.iterrows():
 final_df = pd.DataFrame(
     data, columns=["Tamb", "I", "Tcoolant_in", "mass_flowrate_optimal"]
 )
-final_df.to_csv("solar_cooling_training_data_test.csv", index=False)
+final_df.to_csv("../solar_data/solar_cooling_training_data_test.csv", index=False)
 
 print(
     "------- Test dataset generation complete. Saved as solar_cooling_training_data_test.csv -------"

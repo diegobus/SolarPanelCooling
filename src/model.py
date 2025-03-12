@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 # ----------- PREPARE THE DATA FOR THE MODEL ----------- #
 
 # Load the dataset and define features and target
-data = pd.read_csv('large_cooling_data_complete.csv')
+data = pd.read_csv('../solar_data/cooling_data_complete.csv')
 X = data[['Tamb', 'I', 'Tcool_in']]  # features
 y = data['mass_flowrate']  # target
 
@@ -78,8 +78,8 @@ for i, layer in enumerate(model.layers):
 weights_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in weights_dict.items()]))
 
 # Save to CSV
-weights_df.to_csv("nn_weights.csv", index=False)
-print("Neural network weights saved to nn_weights.csv")
+weights_df.to_csv("../model/nn_weights.csv", index=False)
+print("Neural network weights saved to nn_weights.csv in model/")
 
 # ----------- USE MODEL TO MAKE PREDICTIONS ----------- #
 # Use model to make predictions on the test data
