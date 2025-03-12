@@ -1,6 +1,6 @@
 # Solar Panel Cooling Optimization
 
-## Project Overview
+## 1. Project Overview
 
 This project models and optimizes cooling systems for solar panels to mitigate efficiency losses caused by high operating temperatures. Solar panels experience reduced efficiency as temperature increases, with typical efficiency decreases of 0.45% per °C above reference temperature 25°C. By implementing active cooling strategies, we can maintain higher panel efficiencies while accounting for the energy cost of pumping coolant.
 
@@ -8,7 +8,7 @@ The project has two main components:
 1. Data generation: Simulates solar panel behavior under various environmental conditions and calculates optimal flow rates
 2. Model training: Uses neural network to predict optimal coolant flow rates based on environmental inputs
 
-### Repository Layout and Key Files
+## 2. Repository Layout and Key Files
 
 - `config` folder: contains configuration files
   - `config_template.py`: Configuration file for sensitive data like NERL API key and email. Create a `.gitignore` file to hide the file after renaming to `config.py`.
@@ -36,7 +36,7 @@ The project has two main components:
     - Implements a simple neural network with regularization
     - Evaluates model performance and generates visualizations
 
-## Required Dependencies
+## 3. Required Dependencies
 
 Activate a conda environment with Python 3.10 or earlier. The following dependencies are required:
 ```
@@ -52,7 +52,7 @@ You can install the necessary dependencies in a conda enviroment with:
 pip install -r requirements.txt
 ```
 
-## Model Workflow
+## 4. Data Workflow
 
 ### Environmental Data Acquisition
 1. Run `get_solar_data.py` to download solar irradiance and temperature data for Mojave desert from NREL's NSRDB (National Solar Radiation Database). NOTE:
@@ -77,9 +77,8 @@ For parallel and non-parallel versions, you can adjust `num_samples` to only run
 
 Model training data is saved to `solar_data/cooling_data_complete.csv`.
 
-## Model Training and Evaluation
 
-## Model Training
+## 5. Model Training and Evaluation
 
 ### Running the Model
 To train the neural network model, run:
