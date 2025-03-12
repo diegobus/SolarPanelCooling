@@ -49,7 +49,7 @@ scikit-learn>=0.23.0
 
 You can install the necessary dependencies in a conda enviroment with:
 ```
-pip install -r requirements.txt
+pip install -r config/requirements.txt
 ```
 
 ## 4. Data Workflow
