@@ -73,7 +73,7 @@ def fetch_and_filter_csv(year):
         df = df[["time", "air_temperature", "ghi"]]
 
         # Save filtered dataset to CSV for this year
-        output_file = f"mojave_summer_clear_days_{year}.csv"
+        output_file = f"solar_data/mojave_summer_clear_days_{year}.csv"
         df.to_csv(output_file, index=False)
         print(f"Filtered data for {year} saved to {output_file} with {len(df)} rows")
         
@@ -96,7 +96,7 @@ def merge_csv_files(years=[2020, 2021, 2022, 2023]):
     print(f"Combined data from {len(dataframes)} years: {len(combined_df)} rows")
     
     # save the combined dataset
-    combined_df.to_csv("mojave_summer_clear_days.csv", index=False)
+    combined_df.to_csv("solar_data/mojave_summer_clear_days.csv", index=False)
     print(f"Combined data saved to mojave_summer_clear_days.csv with {len(combined_df)} rows")
 
 
