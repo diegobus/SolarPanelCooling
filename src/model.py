@@ -87,6 +87,10 @@ y_pred_scaled = model.predict(X_test_scaled).flatten()
 y_pred = scaler_y.inverse_transform(y_pred_scaled.reshape(-1, 1)).flatten() # invert scaling of targets
 y_pred = np.maximum(y_pred, 0) # clip negatives since can't have negative flowrate
 
+# save predictions to csv
+pd.DataFrame({'Actual': y_test, 'Predicted': y_pred}).to_csv('../model/nn_predictions.csv', index=False)
+
+
 # Evaluate the model
 r2 = r2_score(y_test, y_pred)
 print(f"Test R^2 Score: {r2:.4f}")
