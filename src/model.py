@@ -92,22 +92,32 @@ r2 = r2_score(y_test, y_pred)
 print(f"Test R^2 Score: {r2:.4f}")
 
 # Plot actual vs predicted values
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(6, 4))
 plt.scatter(y_test, y_pred, alpha=0.5)
 plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
-plt.xlabel('Actual mass_flowrate_optimal')
-plt.ylabel('Predicted mass_flowrate_optimal')
-plt.title('Neural Network: Actual vs Predicted Flowrate')
-plt.grid(True)
-plt.show()
+plt.xlabel('Actual Flow Rate (kg/s)', fontsize=12)
+plt.ylabel('Predicted Flow Rate (kg/s)', fontsize=12)
+# plt.title('Neural Network: Actual vs Predicted Flow Rate')
+plt.grid(False)
+# add R^2 value to plot
+plt.text(0.05, 0.85, f"R^2 = {r2:.4f}", transform=plt.gca().transAxes)
+# move subplot up and to the right
+plt.subplots_adjust(left=0.15, bottom=0.135)
+# save to ../model/NN_actual_vs_predicted_flowrate.png
+plt.savefig("../model/NN_actual_vs_predicted_flowrate.png")
+
+
+
 
 # Plot loss history
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(6, 4))
 plt.plot(history.history['loss'], label='Train Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss (MSE)')
-plt.title('Loss Curve')
+plt.xlabel('Epochs', fontsize=12)
+plt.ylabel('Loss (MSE)', fontsize=12)
+# plt.title('Loss Curve')
 plt.legend()
-plt.grid(True)
-plt.show()
+plt.grid(False)
+plt.subplots_adjust(bottom=0.15)
+# save to ../model/NN_loss_curve.png
+plt.savefig("../model/NN_loss_curve.png")
